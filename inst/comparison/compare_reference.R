@@ -66,9 +66,9 @@ class_partitions_equal <- function(reference_map, new_map, target_taxon) {
 }
 
 bundle <- read_orchidee_bundle(bundle_dir)
-new_result <- run_ecoli_c3g_slice(bundle)
-new_saureus_result <- run_saureus_methicillin_slice(bundle)
-new_kpneumo_result <- run_kpneumo_blse_slice(bundle)
+new_result <- orchideecore:::run_ecoli_c3g_slice(bundle)
+new_saureus_result <- orchideecore:::run_saureus_methicillin_slice(bundle)
+new_kpneumo_result <- orchideecore:::run_kpneumo_blse_slice(bundle)
 dedup_path <- file.path(orchidee1_root, "data", "dedup_results")
 if (!file.exists(dedup_path)) {
   stop("Missing ORCHIDEE 1 dedup artifact: ", dedup_path, call. = FALSE)

@@ -348,8 +348,10 @@
   }
 
   representatives <- .bind_rows_base(representatives)
-  proxy_cols <- c(".pheno_blse_sr", ".pheno_carba_sr")
-  representatives[intersect(proxy_cols, names(representatives))] <- NULL
+  internal_cols <- c(
+    ".row_id_global", ".pheno_blse_sr", ".pheno_carba_sr"
+  )
+  representatives[intersect(internal_cols, names(representatives))] <- NULL
 
   list(
     representatives = representatives,

@@ -296,6 +296,48 @@ ratb_indicator_catalogue <- function() {
   )
 }
 
+.empty_catalogue_isolate_results <- function() {
+  data.frame(
+    canonical_row_id = character(),
+    PATID = character(),
+    dedup_year = integer(),
+    phenotype_class = integer(),
+    scope = character(),
+    sample_type = character(),
+    indicator_id = character(),
+    indicator_result = character(),
+    n_tested_cells = numeric(),
+    n_resistant_cells = numeric(),
+    stringsAsFactors = FALSE
+  )
+}
+
+.empty_catalogue_proportion <- function() {
+  data.frame(
+    indicator_id = character(),
+    dataset = character(),
+    organism_section = character(),
+    organism_label = character(),
+    report_taxon_label = character(),
+    indicator_label = character(),
+    indicator_kind = character(),
+    numerator_kind = character(),
+    denominator_kind = character(),
+    display_order = integer(),
+    scope = character(),
+    sample_type = character(),
+    dedup_year = integer(),
+    n_isolates = integer(),
+    n_r = integer(),
+    n_s = integer(),
+    n_o = integer(),
+    n_tested = integer(),
+    n_resistant = integer(),
+    pct_resistant = numeric(),
+    stringsAsFactors = FALSE
+  )
+}
+
 .build_catalogue_isolate_results <- function(
     dedup,
     spec,
@@ -348,6 +390,9 @@ ratb_indicator_catalogue <- function() {
       )
     }
   }
+  if (length(parts) == 0L) {
+    return(.empty_catalogue_isolate_results())
+  }
   .bind_rows_base(parts)
 }
 
@@ -367,6 +412,9 @@ ratb_indicator_catalogue <- function() {
 }
 
 .summarize_catalogue_proportion <- function(isolate_results, spec) {
+  if (nrow(isolate_results) == 0L) {
+    return(.empty_catalogue_proportion())
+  }
   parts <- list()
   part_index <- 0L
   result_key <- paste(
@@ -524,8 +572,11 @@ ratb_indicator_catalogue <- function() {
 #'
 #' @param bundle A list returned by `read_orchidee_bundle()` or an equivalent
 #'   in-memory canonical bundle.
-#' @return A named list containing the catalogue, audits, both deduplication
-#'   scopes, isolate-level results, annual proportions, and annual incidence.
+#' @return An object of class `orchidee_ratb_catalogue`. Its primary results
+#'   are `proportion_annual` and `incidence_annual`; the remaining elements
+#'   contain the executed catalogue, manifest, stage counts, and row-level
+#'   audit evidence. The exact result contract is identified by
+#'   `manifest$output_contract`.
 #' @export
 run_ratb_catalogue <- function(bundle) {
   spec <- .read_ratb_indicator_catalogue()
@@ -567,6 +618,7 @@ run_ratb_catalogue <- function(bundle) {
     manifest = list(
       method_profile = "ratb_catalogue_raw_patient_year_v1",
       canonical_contract = "v1",
+      output_contract = "ratb_catalogue_result_v1",
       completion_applied = FALSE,
       n_indicators = nrow(spec),
       n_proportion_indicators = sum(spec[["publish_proportion"]]),

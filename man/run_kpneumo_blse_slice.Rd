@@ -14,3 +14,4 @@ Applies scope, K. pneumoniae plausibility QC, raw global patient-year
 deduplication with class-level phenotype finalization, annual BLSE proportion,
 and annual BLSE incidence. Completion is not run.
 }
+\keyword{internal}

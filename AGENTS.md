@@ -15,6 +15,9 @@ operational reference and must not be modified as a side effect of work here.
   artifacts.
 - Excluded: completion, hospital-specific extraction, external-bundle
   construction, caching, Quarto, HTML, plots, and interpretive reporting.
+- Public API: `read_orchidee_bundle()`, `ratb_indicator_catalogue()`, and
+  `run_ratb_catalogue()` only. The three focused slice runners are internal
+  test and teaching fixtures.
 
 Do not add completion or broaden the public API without an explicit project
 decision. The catalogue is declarative data with four closed indicator kinds;

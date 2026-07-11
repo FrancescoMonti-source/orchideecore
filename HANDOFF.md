@@ -7,7 +7,7 @@ one primary profile:
 
 - `ratb_catalogue_raw_patient_year_v1` (140 indicators, global and by-type).
 
-The three focused compatibility profiles remain:
+The three focused compatibility profiles remain internal:
 
 - `ecoli_c3g_raw_global_patient_year_v1`
 - `saureus_methicillin_raw_global_patient_year_v1`
@@ -37,9 +37,16 @@ representatives and class partitions, plus identical complete proportion and
 incidence panels and isolate-level results for all 140 indicators. The packaged
 catalogue has MD5
 `bebc2da626aa22e881fa1f6786d1a459`, identical to ORCHIDEE 1.
+The gate was rerun after API ratification and passed at every comparison level.
 
-The package now has 17 specification/invariant test cases. Every added test
+The package now has 20 specification/invariant test cases. Every added test
 states the contract it protects.
+
+The ratified public API contains only `read_orchidee_bundle()`,
+`ratb_indicator_catalogue()`, and `run_ratb_catalogue()`. The complete runner
+returns `ratb_catalogue_result_v1`; empty isolate and proportion outputs retain
+their typed schemas, and transient representative-order columns are not
+exposed.
 
 ## Ownership split
 
@@ -73,10 +80,7 @@ comparison evidence.
 
 ## Next decisions
 
-1. Review and ratify `run_ratb_catalogue()` and its output contract.
-2. Decide whether the current performance advantage is sufficient before
-   attempting broader ordering changes with higher semantic risk.
-3. Decide where the repository will be hosted and add CI for package tests and
+1. Decide where the repository will be hosted and add CI for package tests and
    `R CMD check` without committing private reference data.
-4. Keep completion as a separate future decision; it is not implied by this
+2. Keep completion as a separate future decision; it is not implied by this
    handoff.

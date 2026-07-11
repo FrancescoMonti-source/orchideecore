@@ -14,6 +14,81 @@ test_that("the packaged catalogue has the complete closed vocabulary", {
   expect_equal(sum(spec$publish_incidence), 135L)
 })
 
+# Why: protects the intentionally small public package interface.
+test_that("only the bundle, catalogue, and complete runner are exported", {
+  expect_equal(
+    sort(getNamespaceExports("orchideecore")),
+    sort(c(
+      "read_orchidee_bundle", "ratb_indicator_catalogue",
+      "run_ratb_catalogue"
+    ))
+  )
+})
+
+# Why: protects the versioned output contract and its stable analytical keys.
+test_that("the complete runner returns the ratb catalogue result v1 contract", {
+  result <- run_ratb_catalogue(make_catalogue_fixture())
+  expect_s3_class(result, "orchidee_ratb_catalogue")
+  expect_named(result, c(
+    "manifest", "catalogue", "population_summary", "scope_audit",
+    "plausibility_audit", "plausibility_unavailable_rules", "dedup",
+    "isolate_results", "proportion_annual", "incidence_annual"
+  ))
+  expect_identical(
+    result$manifest$output_contract,
+    "ratb_catalogue_result_v1"
+  )
+  expect_equal(
+    anyDuplicated(result$proportion_annual[c(
+      "indicator_id", "scope", "sample_type", "dedup_year"
+    )]),
+    0L
+  )
+  expect_equal(
+    anyDuplicated(result$incidence_annual[c(
+      "indicator_id", "scope", "sample_type", "dedup_year"
+    )]),
+    0L
+  )
+  expect_equal(
+    anyDuplicated(result$isolate_results[c(
+      "canonical_row_id", "scope", "sample_type", "indicator_id"
+    )]),
+    0L
+  )
+  expect_true(all(
+    result$isolate_results$indicator_result %in% c("R", "S", "O")
+  ))
+  expect_false(".row_id_global" %in% names(
+    result$dedup$global$representatives
+  ))
+  expect_false(".row_id_global" %in% names(
+    result$dedup$by_type$representatives
+  ))
+})
+
+# Why: protects the output contract when a valid bundle has no eligible rows.
+test_that("empty catalogue results retain their typed schemas", {
+  bundle <- make_catalogue_fixture()
+  bundle$sample_scope_reference$sample_uf_is_eligible_by_ta_de[] <- FALSE
+  result <- run_ratb_catalogue(bundle)
+
+  expect_equal(nrow(result$isolate_results), 0L)
+  expect_named(result$isolate_results, c(
+    "canonical_row_id", "PATID", "dedup_year", "phenotype_class", "scope",
+    "sample_type", "indicator_id", "indicator_result", "n_tested_cells",
+    "n_resistant_cells"
+  ))
+  expect_equal(nrow(result$proportion_annual), 0L)
+  expect_named(result$proportion_annual, c(
+    "indicator_id", "dataset", "organism_section", "organism_label",
+    "report_taxon_label", "indicator_label", "indicator_kind",
+    "numerator_kind", "denominator_kind", "display_order", "scope",
+    "sample_type", "dedup_year", "n_isolates", "n_r", "n_s", "n_o",
+    "n_tested", "n_resistant", "pct_resistant"
+  ))
+})
+
 # Why: protects the current S. aureus catalogue recipe beyond methicillin alone.
 test_that("the catalogue executes all S. aureus indicator kinds", {
   result <- run_ratb_catalogue(make_catalogue_fixture())

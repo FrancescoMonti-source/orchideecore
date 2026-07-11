@@ -13,3 +13,4 @@ equivalent in-memory canonical bundle.}
 Applies scope, plausibility QC, raw global patient-year deduplication, C3G
 derivation, annual resistance, and annual incidence. Completion is not run.
 }
+\keyword{internal}

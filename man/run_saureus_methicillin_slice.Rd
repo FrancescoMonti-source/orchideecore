@@ -14,3 +14,4 @@ Applies scope, S. aureus oxacillin/cefoxitin plausibility QC, raw global
 patient-year deduplication, methicillin derivation, annual resistance, and
 annual incidence. Completion is not run.
 }
+\keyword{internal}

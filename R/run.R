@@ -70,7 +70,7 @@
 #' @param bundle A list returned by [read_orchidee_bundle()] or an equivalent
 #'   in-memory canonical bundle.
 #' @return A named list containing results and stage-level audit artifacts.
-#' @export
+#' @keywords internal
 run_ecoli_c3g_slice <- function(bundle) {
   .run_raw_indicator_slice(
     bundle = bundle,
@@ -89,7 +89,7 @@ run_ecoli_c3g_slice <- function(bundle) {
 #' @param bundle A list returned by [read_orchidee_bundle()] or an equivalent
 #'   in-memory canonical bundle.
 #' @return A named list containing results and stage-level audit artifacts.
-#' @export
+#' @keywords internal
 run_saureus_methicillin_slice <- function(bundle) {
   .run_raw_indicator_slice(
     bundle = bundle,
@@ -108,7 +108,7 @@ run_saureus_methicillin_slice <- function(bundle) {
 #' @param bundle A list returned by [read_orchidee_bundle()] or an equivalent
 #'   in-memory canonical bundle.
 #' @return A named list containing results and stage-level audit artifacts.
-#' @export
+#' @keywords internal
 run_kpneumo_blse_slice <- function(bundle) {
   .run_raw_indicator_slice(
     bundle = bundle,

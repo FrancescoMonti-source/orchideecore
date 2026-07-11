@@ -16,9 +16,11 @@ validated canonical bundle v1
 ```
 
 The original E. coli C3G, S. aureus methicillin, and K. pneumoniae BLSE slice
-functions remain available as small compatibility and teaching entry points.
-Completion is explicitly out of scope. The package also contains no local
-hospital adapter, cache, Quarto code, plots, HTML, or implicit global setup.
+functions remain internal as small compatibility and teaching fixtures. The
+public API is limited to `read_orchidee_bundle()`,
+`ratb_indicator_catalogue()`, and `run_ratb_catalogue()`. Completion is
+explicitly out of scope. The package also contains no local hospital adapter,
+cache, Quarto code, plots, HTML, or implicit global setup.
 
 ## Input boundary
 
@@ -49,6 +51,20 @@ plausibility decisions, both SPARES class maps, isolate-level results, and
 population counts. `ratb_indicator_catalogue()` exposes the fixed catalogue for
 inspection.
 
+## Result contract
+
+`run_ratb_catalogue()` returns an `orchidee_ratb_catalogue` list. The manifest
+identifies its output contract as `ratb_catalogue_result_v1`. The primary
+analytical outputs are `proportion_annual` and `incidence_annual`; the other
+elements retain the catalogue and the evidence required to audit scope,
+plausibility, deduplication, and isolate-level derivation.
+
+The annual panel key is `indicator_id`, `scope`, `sample_type`, and
+`dedup_year`. The isolate-result key is `canonical_row_id`, `scope`,
+`sample_type`, and `indicator_id`. Empty results retain the same typed columns
+as populated results. Deduplication representatives retain canonical input
+columns and method outputs, but exclude transient internal ordering columns.
+
 ## Method profiles
 
 The complete profile is named `ratb_catalogue_raw_patient_year_v1`.
@@ -62,7 +78,8 @@ The complete profile is named `ratb_catalogue_raw_patient_year_v1`.
 - Phenotype flags are finalized at retained-class level.
 - The catalogue is data, not executable R and not a general rule language.
 
-The three original focused profiles remain:
+The three original focused profiles remain as internal test and teaching
+fixtures:
 
 The first profile is fixed in code and named
 `ecoli_c3g_raw_global_patient_year_v1`.

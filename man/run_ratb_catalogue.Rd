@@ -11,8 +11,11 @@ run_ratb_catalogue(bundle)
 in-memory canonical bundle.}
 }
 \value{
-A named list containing the catalogue, audits, both deduplication
-  scopes, isolate-level results, annual proportions, and annual incidence.
+An object of class `orchidee_ratb_catalogue`. Its primary results
+  are `proportion_annual` and `incidence_annual`; the remaining elements
+  contain the executed catalogue, manifest, stage counts, and row-level
+  audit evidence. The exact result contract is identified by
+  `manifest$output_contract`.
 }
 \description{
 Executes the packaged ORCHIDEE 1 catalogue from a validated canonical v1
