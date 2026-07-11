@@ -69,7 +69,9 @@ comparison evidence.
   `ratb_scope_cache`, `completion_datasets`, and `dedup_results`. It reads only
   the `sir_wide_raw` branch; despite the artifact name, no completion profile
   is executed in the new core.
-- There is no remote repository or CI configuration yet.
+- GitHub Actions runs the package tests and `R CMD check` on Ubuntu with the
+  repository's public synthetic fixtures. The real-data comparison harness is
+  intentionally excluded because it depends on local ORCHIDEE 1 artifacts.
 - Before the singleton fast path, two staged uncached new-core runs took 268.89
   and 259.52 seconds. After it, the complete reference gate took 216.93 seconds
   and the staged profile took 202.11 seconds. The equivalent uncached ORCHIDEE
@@ -80,7 +82,5 @@ comparison evidence.
 
 ## Next decisions
 
-1. Decide where the repository will be hosted and add CI for package tests and
-   `R CMD check` without committing private reference data.
-2. Keep completion as a separate future decision; it is not implied by this
+1. Keep completion as a separate future decision; it is not implied by this
    handoff.

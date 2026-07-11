@@ -1,5 +1,7 @@
 # orchideecore
 
+[![R-CMD-check](https://github.com/FrancescoMonti-source/orchideecore/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FrancescoMonti-source/orchideecore/actions/workflows/R-CMD-check.yaml)
+
 `orchideecore` is a portable analytical-core experiment, not yet a replacement
 for operational ORCHIDEE 1.
 
@@ -33,6 +35,9 @@ The package consumes the four files built and validated by ORCHIDEE 1:
 
 Validation of the complete external contract remains owned by ORCHIDEE 1.
 This package adds only the assertions required to execute this slice safely.
+GitHub Actions runs the package tests and `R CMD check` only against the
+public synthetic fixtures committed in this repository. The real-data
+comparison gate remains a local validation step.
 
 ## Minimal run
 
