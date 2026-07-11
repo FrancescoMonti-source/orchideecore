@@ -1,0 +1,16 @@
+Package: orchideecore
+Title: Experimental Portable Core for ORCHIDEE RATB Indicators
+Version: 0.0.0.9000
+Authors@R: person("ORCHIDEE", "Maintainers", email = "orchidee@example.invalid", role = c("aut", "cre"))
+Description: Implements deliberately narrow, auditable ORCHIDEE core profiles
+    from a validated canonical bundle to annual Escherichia coli C3G,
+    Staphylococcus aureus methicillin, and Klebsiella pneumoniae BLSE
+    resistance and incidence outputs. The experiment excludes completion,
+    reporting, caching, and hospital-specific extraction.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+Depends: R (>= 4.1.0)
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
