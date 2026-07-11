@@ -104,7 +104,8 @@ remains in
 `inst/validation/reference-gate-2026-07-11.md`; the full gate is recorded in
 `inst/validation/catalogue-reference-gate-2026-07-11.md`.
 
-The final uncached full run took 269.11 seconds on the reference machine.
-Correctness
-and portability are established; performance is not yet a demonstrated
-advantage over ORCHIDEE 1.
+Two staged uncached runs took 268.89 and 259.52 seconds on the reference
+machine. The equivalent uncached ORCHIDEE 1 run took 263.67 seconds, so the
+observed runtime is effectively tied. Peak measured memory was 633.2 MB for the
+new core and 716.0 MB for ORCHIDEE 1. The detailed profile is recorded in
+`inst/validation/performance-profile-2026-07-11.md`.

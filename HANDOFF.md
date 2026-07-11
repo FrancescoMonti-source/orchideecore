@@ -63,16 +63,20 @@ comparison evidence.
   the `sir_wide_raw` branch; despite the artifact name, no completion profile
   is executed in the new core.
 - There is no remote repository or CI configuration yet.
-- The final uncached complete new-core run took 269.11 seconds on the reference
-  machine. The full isolate-level new-plus-reference gate took 312.8 seconds.
-  Performance is a known limit and has not been declared better than ORCHIDEE
-  1.
+- Two staged uncached new-core runs took 268.89 and 259.52 seconds. The
+  equivalent uncached ORCHIDEE 1 run took 263.67 seconds, so runtime is
+  effectively tied on the reference bundle. Peak measured memory was 633.2 MB
+  for the new core versus 716.0 MB for ORCHIDEE 1.
+- About 96% of new-core runtime is in the two SPARES passes. R profiling points
+  to repeated EVT/ELT ordering, especially during representative selection.
+  Singleton classes are 84.4% of global classes and 90.4% of by-type classes.
 
 ## Next decisions
 
 1. Review and ratify `run_ratb_catalogue()` and its output contract.
-2. Profile the two SPARES passes before deciding whether performance work or a
-   deliberately external cache is justified.
+2. Evaluate the exact fast path that selects the sole member of a singleton
+   class without recomputing representative-order keys; protect it with the
+   complete reference gate.
 3. Decide where the repository will be hosted and add CI for package tests and
    `R CMD check` without committing private reference data.
 4. Keep completion as a separate future decision; it is not implied by this
