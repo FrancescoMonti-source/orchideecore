@@ -78,3 +78,32 @@ Selecting the sole row directly is semantics-preserving and avoids unnecessary
 EVT/ELT derivation for most classes. This candidate has not been implemented.
 Any implementation must pass the complete representative, partition,
 isolate-level, proportion, and incidence reference gate before acceptance.
+
+## Singleton fast-path result
+
+The candidate was implemented as an exact fast path: when a phenotype class
+contains one row, that row is selected directly. Multi-row classes still use
+the unchanged representative-order function.
+
+| Stage | Before (s) | After (s) | Change |
+| --- | ---: | ---: | ---: |
+| SPARES global | 119.58 | 94.73 | -20.8% |
+| SPARES by type | 128.38 | 95.67 | -25.5% |
+| Both SPARES passes | 247.96 | 190.40 | -23.2% |
+| Complete staged pipeline | 259.52 | 202.11 | -22.1% |
+
+The complete reference harness measured 269.11 seconds before the change and
+216.93 seconds afterward (-19.4%). The equivalent ORCHIDEE 1 uncached profile
+was 263.67 seconds.
+
+The post-change gate confirmed identical:
+
+- global and by-type representative sets
+- global and by-type class partitions
+- all isolate-level indicator results
+- complete annual proportion panel
+- complete annual incidence panel
+
+Memory was not an optimization target. The measured post-change peak remained
+in the same modest range and is treated as run-to-run variation rather than a
+performance claim.

@@ -302,6 +302,11 @@
     representative_local <- integer(max(classes))
     for (class_id in seq_len(max(classes))) {
       candidates <- which(classes == class_id)
+      # A singleton cannot be affected by representative tie-break rules.
+      if (length(candidates) == 1L) {
+        representative_local[[class_id]] <- candidates[[1L]]
+        next
+      }
       selected <- .representative_order(
         group[candidates, , drop = FALSE], "nb_resultats"
       )[[1L]]

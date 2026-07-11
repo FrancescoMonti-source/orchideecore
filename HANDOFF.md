@@ -38,7 +38,7 @@ incidence panels and isolate-level results for all 140 indicators. The packaged
 catalogue has MD5
 `bebc2da626aa22e881fa1f6786d1a459`, identical to ORCHIDEE 1.
 
-The package now has 16 specification/invariant test cases. Every added test
+The package now has 17 specification/invariant test cases. Every added test
 states the contract it protects.
 
 ## Ownership split
@@ -63,10 +63,10 @@ comparison evidence.
   the `sir_wide_raw` branch; despite the artifact name, no completion profile
   is executed in the new core.
 - There is no remote repository or CI configuration yet.
-- Two staged uncached new-core runs took 268.89 and 259.52 seconds. The
-  equivalent uncached ORCHIDEE 1 run took 263.67 seconds, so runtime is
-  effectively tied on the reference bundle. Peak measured memory was 633.2 MB
-  for the new core versus 716.0 MB for ORCHIDEE 1.
+- Before the singleton fast path, two staged uncached new-core runs took 268.89
+  and 259.52 seconds. After it, the complete reference gate took 216.93 seconds
+  and the staged profile took 202.11 seconds. The equivalent uncached ORCHIDEE
+  1 run took 263.67 seconds.
 - About 96% of new-core runtime is in the two SPARES passes. R profiling points
   to repeated EVT/ELT ordering, especially during representative selection.
   Singleton classes are 84.4% of global classes and 90.4% of by-type classes.
@@ -74,9 +74,8 @@ comparison evidence.
 ## Next decisions
 
 1. Review and ratify `run_ratb_catalogue()` and its output contract.
-2. Evaluate the exact fast path that selects the sole member of a singleton
-   class without recomputing representative-order keys; protect it with the
-   complete reference gate.
+2. Decide whether the current performance advantage is sufficient before
+   attempting broader ordering changes with higher semantic risk.
 3. Decide where the repository will be hosted and add CI for package tests and
    `R CMD check` without committing private reference data.
 4. Keep completion as a separate future decision; it is not implied by this

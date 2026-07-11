@@ -29,12 +29,15 @@ are not both 140.
 
 ## Performance observation
 
-- new core, final uncached complete run: 269.11 elapsed seconds
-- complete isolate-level new-core plus ORCHIDEE 1 gate: 312.8 elapsed seconds
+- new core before singleton fast path: 269.11 elapsed seconds
+- new core after singleton fast path: 216.93 elapsed seconds
+- complete post-fast-path isolate-level new-core plus ORCHIDEE 1 gate:
+  263.0 elapsed seconds
 
-This establishes correctness, not a performance advantage. The dominant work
-is the pair of full SPARES passes (global and by sample type). Caching remains
-outside the core and requires a separate design decision.
+The post-fast-path gate retained exact equality at every comparison level. The
+dominant work remains the pair of full SPARES passes (global and by sample
+type). Caching remains outside the core and requires a separate design
+decision.
 
 ## Interpretation boundary
 

@@ -42,6 +42,31 @@ test_that("antibiotic conflict creates separate classes", {
   expect_equal(sum(p1$is_representative), 2L)
 })
 
+# Why: protects the performance regression that singleton classes need no
+# representative-order calculation while preserving their sole member.
+test_that("singleton class selects its sole member directly", {
+  bundle <- make_slice_fixture()
+  one <- bundle$sir_wide[3L, , drop = FALSE]
+  one$canonical_row_id <- orchideecore:::.make_canonical_row_id(one)
+
+  testthat::local_mocked_bindings(
+    .representative_order = function(...) {
+      stop("representative ordering should not run for a singleton class")
+    },
+    .package = "orchideecore"
+  )
+
+  result <- orchideecore:::.deduplicate_raw_patient_year(
+    one,
+    bundle$sir_wide_meta$atb_cols
+  )
+  expect_equal(nrow(result$representatives), 1L)
+  expect_identical(
+    result$representatives$canonical_row_id,
+    one$canonical_row_id
+  )
+})
+
 # Why: protects the current phenotype compatibility boundary during deduplication.
 test_that("positive and non-positive phenotype signals do not mix", {
   bundle <- make_slice_fixture()
