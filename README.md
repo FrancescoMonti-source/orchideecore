@@ -1,35 +1,22 @@
 # orchideecore
 
-`orchideecore` is a bounded experiment, not a replacement for ORCHIDEE 1.
+`orchideecore` is a portable analytical-core experiment, not yet a replacement
+for operational ORCHIDEE 1.
 
-The implemented profiles are deliberately limited to:
+The primary path now executes the complete 140-row RATB catalogue:
 
 ```text
 validated canonical bundle v1
   -> sample TA/DE scope
-  -> E. coli selection
-  -> C3G-relevant biological plausibility QC
-  -> raw global patient-year SPARES-style deduplication
-  -> annual E. coli / C3G resistance proportion
-  -> annual incidence density per 1,000 hospital nights
-
-validated canonical bundle v1
-  -> sample TA/DE scope
-  -> K. pneumoniae selection
-  -> intrinsic-resistance plausibility QC
-  -> raw global patient-year SPARES-style deduplication
-  -> class-level BLSE finalization
-  -> annual BLSE-positive proportion and incidence density
-
-validated canonical bundle v1
-  -> sample TA/DE scope
-  -> S. aureus selection
-  -> oxacillin/cefoxitin plausibility QC
-  -> raw global patient-year SPARES-style deduplication
-  -> annual S. aureus / methicillin resistance proportion
-  -> annual incidence density per 1,000 hospital nights
+  -> RATB biological plausibility QC
+  -> raw patient-year SPARES deduplication (global and by sample type)
+  -> four closed indicator kinds
+  -> 136 annual proportion indicators
+  -> 135 annual incidence indicators
 ```
 
+The original E. coli C3G, S. aureus methicillin, and K. pneumoniae BLSE slice
+functions remain available as small compatibility and teaching entry points.
 Completion is explicitly out of scope. The package also contains no local
 hospital adapter, cache, Quarto code, plots, HTML, or implicit global setup.
 
@@ -49,18 +36,33 @@ This package adds only the assertions required to execute this slice safely.
 
 ```r
 bundle <- read_orchidee_bundle("path/to/validated_bundle")
-result <- run_ecoli_c3g_slice(bundle)
-methicillin <- run_saureus_methicillin_slice(bundle)
-blse <- run_kpneumo_blse_slice(bundle)
+result <- run_ratb_catalogue(bundle)
 
-result$resistance_annual
+result$proportion_annual
 result$incidence_annual
+result$dedup$global$representatives
+result$dedup$by_type$representatives
 ```
 
-The result also contains row-level scope and plausibility decisions, class
-membership, representatives, isolate-level C3G results, and population counts.
+The result also contains the packaged catalogue, row-level scope and
+plausibility decisions, both SPARES class maps, isolate-level results, and
+population counts. `ratb_indicator_catalogue()` exposes the fixed catalogue for
+inspection.
 
-## Method profile
+## Method profiles
+
+The complete profile is named `ratb_catalogue_raw_patient_year_v1`.
+
+- All 140 definitions are copied byte-for-byte from the ORCHIDEE 1 publication
+  catalogue.
+- Indicator behavior is limited to `molecule_direct`, `class_any_r`,
+  `molecule_priority`, and `phenotype_flag`.
+- Deduplication is computed once globally and once with sample type in the
+  patient-year key; indicators reuse those representatives.
+- Phenotype flags are finalized at retained-class level.
+- The catalogue is data, not executable R and not a general rule language.
+
+The three original focused profiles remain:
 
 The first profile is fixed in code and named
 `ecoli_c3g_raw_global_patient_year_v1`.
@@ -92,15 +94,17 @@ The third profile is named `kpneumo_blse_raw_global_patient_year_v1`.
   ORCHIDEE 1 indicator specification.
 - Completion: not applied.
 
-The profile should not be generalized until this slice and a second,
-methodologically different slice have passed comparison against ORCHIDEE 1 and
-specification fixtures.
-
 ## Current reference gate
 
-All three real-data comparisons passed on 2026-07-11. Scope and post-QC counts,
-all 8,356 E. coli representatives, all 3,405 S. aureus representatives, all
-1,728 K. pneumoniae representatives, SPARES class partitions, isolate-level
-results, annual panels, and annual incidence outputs were identical to
-ORCHIDEE 1. The frozen evidence and bundle hashes are recorded in
-`inst/validation/reference-gate-2026-07-11.md`.
+The complete real-data comparison passed on 2026-07-11. All 140 indicators,
+global and by-type representatives, both SPARES class partitions, the complete
+isolate-level indicator result set, annual proportion panel, and annual
+incidence panel were identical to ORCHIDEE 1. The focused-profile evidence
+remains in
+`inst/validation/reference-gate-2026-07-11.md`; the full gate is recorded in
+`inst/validation/catalogue-reference-gate-2026-07-11.md`.
+
+The final uncached full run took 269.11 seconds on the reference machine.
+Correctness
+and portability are established; performance is not yet a demonstrated
+advantage over ORCHIDEE 1.

@@ -171,3 +171,20 @@ make_kpneumo_blse_fixture <- function() {
     )
   )
 }
+
+make_catalogue_fixture <- function() {
+  bundle <- make_saureus_fixture()
+  spec <- ratb_indicator_catalogue()
+  requested <- unique(unlist(strsplit(
+    spec$molecule_values[!is.na(spec$molecule_values)],
+    "|",
+    fixed = TRUE
+  )))
+  requested <- requested[nzchar(requested)]
+  for (column in setdiff(requested, names(bundle$sir_wide))) {
+    bundle$sir_wide[[column]] <- NA_character_
+  }
+  bundle$sir_wide$SEJUF[7] <- "UF2"
+  bundle$sir_wide_meta$supported_atb_cols <- requested
+  bundle
+}

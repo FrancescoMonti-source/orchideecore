@@ -8,3 +8,5 @@
 DESCRIPTION text eol=lf
 LICENSE text eol=lf
 NAMESPACE text eol=lf
+inst/extdata/ratb_indicator_spec.csv text eol=lf whitespace=-blank-at-eof
+inst/extdata/species_taxonomy.csv text eol=lf

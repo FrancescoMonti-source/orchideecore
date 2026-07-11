@@ -9,15 +9,16 @@ operational reference and must not be modified as a side effect of work here.
 
 - Input: a canonical external bundle v1 already built and validated by
   ORCHIDEE 1.
-- Implemented: TA/DE scope application, profile-specific plausibility QC, raw
-  global patient-year SPARES-style deduplication, indicator derivation,
-  annual resistance, annual incidence, and audit artifacts.
+- Implemented: TA/DE scope application, RATB plausibility QC, raw global and
+  by-type patient-year SPARES-style deduplication, the complete 140-row RATB
+  indicator catalogue, annual resistance, annual incidence, and audit
+  artifacts.
 - Excluded: completion, hospital-specific extraction, external-bundle
   construction, caching, Quarto, HTML, plots, and interpretive reporting.
 
 Do not add completion or broaden the public API without an explicit project
-decision. Do not turn profile definitions into dynamic R expressions or a
-general rule-engine DSL.
+decision. The catalogue is declarative data with four closed indicator kinds;
+do not turn it into dynamic R expressions or a general rule-engine DSL.
 
 ## Change discipline
 

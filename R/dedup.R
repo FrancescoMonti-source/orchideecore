@@ -261,9 +261,19 @@
   out
 }
 
-.deduplicate_raw_patient_year <- function(df, atb_cols) {
+.deduplicate_raw_patient_year <- function(
+    df,
+    atb_cols,
+    group_cols = c("PATID", "dedup_year", "bact_norm")
+  ) {
   work <- df
   work[["dedup_year"]] <- .calendar_year(work[["DATEPRELEV"]])
+  .assert_columns(work, group_cols, "deduplication data")
+  if (!all(c("PATID", "dedup_year", "bact_norm") %in% group_cols)) {
+    .abort(
+      "group_cols must include PATID, dedup_year, and bact_norm."
+    )
+  }
   work[[".row_id_global"]] <- seq_len(nrow(work))
   if (!"nb_resultats" %in% names(work)) {
     work[["nb_resultats"]] <- rowSums(
@@ -275,7 +285,6 @@
   work <- phenotype$data
   conflict_cols <- unique(c(atb_cols, phenotype$columns))
 
-  group_cols <- c("PATID", "dedup_year", "bact_norm")
   group_key <- do.call(paste, c(work[group_cols], sep = "\r"))
   groups <- split(work, group_key, drop = TRUE)
 
@@ -299,15 +308,14 @@
       representative_local[[class_id]] <- candidates[[selected]]
     }
 
-    map <- data.frame(
-      canonical_row_id = group[["canonical_row_id"]],
-      PATID = as.character(group[["PATID"]]),
-      dedup_year = group[["dedup_year"]],
-      bact_norm = as.character(group[["bact_norm"]]),
-      phenotype_class = classes,
-      is_representative = seq_len(nrow(group)) %in% representative_local,
-      stringsAsFactors = FALSE
-    )
+    map <- group[group_cols]
+    map[["canonical_row_id"]] <- group[["canonical_row_id"]]
+    map[["phenotype_class"]] <- classes
+    map[["is_representative"]] <-
+      seq_len(nrow(group)) %in% representative_local
+    map <- map[c(
+      "canonical_row_id", group_cols, "phenotype_class", "is_representative"
+    )]
     class_maps[[index]] <- map
 
     reps <- group[representative_local, , drop = FALSE]
@@ -315,14 +323,12 @@
     reps[["phenotype_class"]] <- seq_len(nrow(reps))
     representatives[[index]] <- reps
 
-    episode_summaries[[index]] <- data.frame(
-      PATID = as.character(group[["PATID"]][[1L]]),
-      dedup_year = group[["dedup_year"]][[1L]],
-      bact_norm = as.character(group[["bact_norm"]][[1L]]),
-      n_docs = nrow(group),
-      n_classes = length(unique(classes)),
-      has_multiple_classes = length(unique(classes)) > 1L,
-      n_within_class_discord_pairs = sum(vapply(
+    episode_summary <- group[1L, group_cols, drop = FALSE]
+    episode_summary[["n_docs"]] <- nrow(group)
+    episode_summary[["n_classes"]] <- length(unique(classes))
+    episode_summary[["has_multiple_classes"]] <-
+      length(unique(classes)) > 1L
+    episode_summary[["n_within_class_discord_pairs"]] <- sum(vapply(
         split(seq_len(nrow(group)), classes),
         function(member_index) {
           if (length(member_index) < 2L) return(0L)
@@ -330,11 +336,10 @@
           sum(sub[upper.tri(sub)])
         },
         numeric(1)
-      )),
-      order_sensitive = length(unique(classes)) !=
-        length(unique(reverse_classes)),
-      stringsAsFactors = FALSE
-    )
+      ))
+    episode_summary[["order_sensitive"]] <- length(unique(classes)) !=
+      length(unique(reverse_classes))
+    episode_summaries[[index]] <- episode_summary
   }
 
   representatives <- .bind_rows_base(representatives)

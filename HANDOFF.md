@@ -2,8 +2,12 @@
 
 ## Current status
 
-As of 2026-07-11, `orchideecore` is a bounded package experiment with three
-raw, global, patient-year profiles:
+As of 2026-07-11, `orchideecore` executes the complete raw RATB catalogue with
+one primary profile:
+
+- `ratb_catalogue_raw_patient_year_v1` (140 indicators, global and by-type).
+
+The three focused compatibility profiles remain:
 
 - `ecoli_c3g_raw_global_patient_year_v1`
 - `saureus_methicillin_raw_global_patient_year_v1`
@@ -28,8 +32,14 @@ Reference counts are 8,356 E. coli, 3,405 S. aureus, and 1,728 K. pneumoniae
 representatives. Bundle hashes and the complete gate are recorded in
 `inst/validation/reference-gate-2026-07-11.md`.
 
-The package has 12 specification/invariant tests and passes
-`R CMD check --no-manual` with status OK under R 4.5.3.
+The full catalogue gate additionally confirms identical global and by-type
+representatives and class partitions, plus identical complete proportion and
+incidence panels and isolate-level results for all 140 indicators. The packaged
+catalogue has MD5
+`bebc2da626aa22e881fa1f6786d1a459`, identical to ORCHIDEE 1.
+
+The package now has 16 specification/invariant test cases. Every added test
+states the contract it protects.
 
 ## Ownership split
 
@@ -45,24 +55,25 @@ comparison evidence.
 
 ## Known limits
 
-- The comparison starts at the canonical bundle. It does not independently
+- The comparisons start at the canonical bundle. They do not independently
   validate raw extraction, diagnostic/screening mapping, unit mapping, or the
   episode-level construction of hospital nights.
-- The reference harness currently depends on local ORCHIDEE 1 artifacts named
+- The reference harnesses currently depend on local ORCHIDEE 1 artifacts named
   `ratb_scope_cache`, `completion_datasets`, and `dedup_results`. It reads only
   the `sir_wide_raw` branch; despite the artifact name, no completion profile
   is executed in the new core.
 - There is no remote repository or CI configuration yet.
-- The comparison recomputes each taxon independently and currently takes about
-  100 seconds on the reference machine.
+- The final uncached complete new-core run took 269.11 seconds on the reference
+  machine. The full isolate-level new-plus-reference gate took 312.8 seconds.
+  Performance is a known limit and has not been declared better than ORCHIDEE
+  1.
 
 ## Next decisions
 
-1. Review and ratify the three-profile public API before adding another
-   profile.
-2. Decide where the repository will be hosted and add CI for package tests and
+1. Review and ratify `run_ratb_catalogue()` and its output contract.
+2. Profile the two SPARES passes before deciding whether performance work or a
+   deliberately external cache is justified.
+3. Decide where the repository will be hosted and add CI for package tests and
    `R CMD check` without committing private reference data.
-3. Decide whether the next method profile should extend phenotype coverage or
-   whether the current experiment is sufficient for an architectural gate.
 4. Keep completion as a separate future decision; it is not implied by this
    handoff.

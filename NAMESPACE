@@ -1,4 +1,6 @@
 export(read_orchidee_bundle)
+export(ratb_indicator_catalogue)
+export(run_ratb_catalogue)
 export(run_ecoli_c3g_slice)
 export(run_kpneumo_blse_slice)
 export(run_saureus_methicillin_slice)
