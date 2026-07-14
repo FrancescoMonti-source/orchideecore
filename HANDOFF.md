@@ -15,6 +15,10 @@ The three focused compatibility profiles remain internal:
 
 Completion is intentionally absent.
 
+The GitHub repository is public and `main` is protected. Routine changes enter
+through a pull request whose `R-CMD-check` status must pass; owner bypass is
+retained only for emergencies.
+
 ## Confirmed evidence
 
 Against ORCHIDEE 1 commit
@@ -72,6 +76,10 @@ comparison evidence.
 - GitHub Actions runs the package tests and `R CMD check` on Ubuntu with the
   repository's public synthetic fixtures. The real-data comparison harness is
   intentionally excluded because it depends on local ORCHIDEE 1 artifacts.
+- The external-site wiki is working onboarding guidance, not yet a validated
+  Rennes contract. A user-led Rennes walkthrough is expected to expose and
+  correct imprecisions upstream in ORCHIDEE 1 before its resulting canonical
+  bundle is treated as a portability gate here.
 - Before the singleton fast path, two staged uncached new-core runs took 268.89
   and 259.52 seconds. After it, the complete reference gate took 216.93 seconds
   and the staged profile took 202.11 seconds. The equivalent uncached ORCHIDEE
@@ -82,5 +90,11 @@ comparison evidence.
 
 ## Next decisions
 
-1. Keep completion as a separate future decision; it is not implied by this
+1. Walk through the external-site path from the Rennes user point of view and
+   correct the upstream ORCHIDEE 1 wiki and onboarding material while keeping
+   site adapters outside this repository.
+2. Once ORCHIDEE 1 has materialized and validated the four-file canonical
+   bundle, run the second-bundle portability gate here and retain only
+   non-identifying aggregate evidence.
+3. Keep completion as a separate future decision; it is not implied by this
    handoff.
