@@ -64,6 +64,52 @@ ORCHIDEE 1 owns:
 This repository owns only the portable downstream experiment and its
 comparison evidence.
 
+## Ratified upstream sample-attribution decision
+
+This decision applies to the hospital/site adapter that builds the canonical
+bundle. It does not expand the current `orchideecore` boundary: this package
+continues to consume an already validated bundle.
+
+The upstream builder must keep three choices independent:
+
+- sample attribution context: hospitalisation unit at sample time by default,
+  or the unit recorded by microbiology as an explicit sensitivity setting;
+- perimeter filters: configured UM, UF, TA, and DE values;
+- output stratification: the dimensions used only for final aggregation.
+
+The default hospitalisation-attribution path is:
+
+1. Treat the microbiology sample datetime as a point in time.
+2. Start from the uncollapsed PMSI intervals returned by `redsan` with
+   `source_policy = "c_over_dw"` (the PMSI default from `redsan` 0.2.0). This
+   applies the explicit `SRC` precedence without replacing the retained
+   intervals with unit-level `min(DATENT)` / `max(DATSORT)` bounds.
+3. Use `EVTID` to identify the hospital stay and retain `PATID` in the join as
+   a provenance guard. Keep intervals satisfying
+   `DATENT <= sample_datetime < DATSORT`.
+4. When exactly one complete UM+UF pair is active, assign that hospitalisation
+   unit even if other active records have an incomplete unit pair; retain the
+   incomplete-record count in the audit.
+5. When several complete UM+UF pairs are active, assign one only if exactly one
+   matches the UM+UF recorded by microbiology. Otherwise record
+   `ambiguous_hebergement`.
+6. When no complete UM+UF pair is active, record `unassigned_hebergement` and
+   distinguish no active interval from incomplete active records in the audit.
+7. Never fall back automatically from datetime matching to calendar-date
+   matching.
+
+Both unresolved statuses are excluded from the hospitalisation-based
+analytical perimeter and retained in the audit with their reason. TA/DE is
+joined to the selected unit only after attribution. The incidence denominator
+continues to come from PMSI hospitalisation activity on the same unit mapping.
+
+The future builder configuration will expose one central choice between
+`hebergement` (default) and `prelevement`; this is not a downstream core knob.
+Attribution, perimeter filters, and output stratification do not alter the
+patient-year deduplication keys. The current bundle v1 and its ratified
+comparison gate remain unchanged until the upstream adapter and a successor
+bundle contract are implemented and validated separately.
+
 ## Known limits
 
 - The comparisons start at the canonical bundle. They do not independently
