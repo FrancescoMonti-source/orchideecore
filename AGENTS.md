@@ -5,6 +5,13 @@
 This repository is an experimental portable RATB core. ORCHIDEE 1 remains the
 operational reference and must not be modified as a side effect of work here.
 
+## Repository state
+
+The experiment is concluded and feature-frozen. Operational development now
+belongs in ORCHIDEE 1; this repository is retained as an independent package,
+comparison harness, and audit trail. Do not add product features here unless an
+explicit project decision reactivates `orchideecore` as a standalone package.
+
 ## Current boundary
 
 - Input: a canonical external bundle v1 or v2 already built and validated by

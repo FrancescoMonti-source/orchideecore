@@ -2,8 +2,9 @@
 
 ## Current status
 
-As of 2026-07-19, `orchideecore` executes the complete raw RATB catalogue with
-one primary profile:
+As of 2026-07-19, `orchideecore` is a concluded, feature-frozen experiment. Its
+final implementation executes the complete raw RATB catalogue with one primary
+profile:
 
 - `ratb_catalogue_raw_patient_year_v1` (140 indicators, global and by-type).
 
@@ -15,9 +16,10 @@ The three focused compatibility profiles remain internal:
 
 Completion is intentionally absent.
 
-The GitHub repository is public and `main` is protected. Routine changes enter
-through a pull request whose `R-CMD-check` status must pass; owner bypass is
-retained only for emergencies.
+Operational development now belongs to ORCHIDEE. This repository remains an
+independent package, comparison harness, and audit trail; it is not an ORCHIDEE
+runtime dependency. The GitHub repository is public, `main` is protected, and
+GitHub archival is the intended final state after this close-out.
 
 ## Confirmed evidence
 
@@ -51,6 +53,16 @@ and isolate-result vocabulary checks passed. Only non-identifying aggregate
 evidence is retained in
 `inst/validation/rouen-bundle-v2-portability-gate-2026-07-19.md`.
 
+The final same-bundle comparison used ORCHIDEE commit
+`f0592a4c1eeb2da2b3d1ed3a9ce9c1038fb01535` and `orchideecore` commit
+`976c4e8d657403f7af101c8c832f26d5e30ac374`. The exact bundle was matched to
+the isolated ORCHIDEE runtime cache before execution. Global and by-type
+representatives, both SPARES partitions, all 773,567 isolate-level indicator
+results, the 5,293-row annual proportion panel, and the 405-row annual incidence
+panel were identical at tolerance zero. The raw, non-completed branch was used
+on both sides. Only aggregate evidence is retained in
+`inst/validation/rouen-bundle-v2-same-bundle-gate-2026-07-19.md`.
+
 The package now has 21 specification/invariant test cases. Every added test
 states the contract it protects.
 
@@ -72,17 +84,19 @@ ORCHIDEE 1 owns:
 
 - hospital adapters and site-input builders;
 - the complete canonical bundle validator;
-- operational production and reporting;
+- the default bundle-v2 operational runtime, production, and reporting;
 - the current methodological reference implementation.
 
-This repository owns only the portable downstream experiment and its
-comparison evidence.
+This repository retains only the frozen portable downstream experiment and its
+comparison evidence. Future operational and methodological changes belong in
+ORCHIDEE unless the standalone package is explicitly reactivated.
 
 ## Ratified upstream sample-attribution decision
 
-This decision applies to the hospital/site adapter that builds the canonical
-bundle. It does not expand the current `orchideecore` boundary: this package
-continues to consume an already validated bundle.
+This historical decision applies to the hospital/site adapter that builds the
+canonical bundle. It does not expand the `orchideecore` boundary: this package
+continues to consume an already validated bundle. The current ORCHIDEE
+documentation is authoritative for its operational implementation.
 
 The upstream builder must keep three choices independent:
 
@@ -129,10 +143,10 @@ separate portability gate.
 - The comparisons start at the canonical bundle. They do not independently
   validate raw extraction, diagnostic/screening mapping, unit mapping, or the
   episode-level construction of hospital nights.
-- The reference harnesses currently depend on local ORCHIDEE 1 artifacts named
-  `ratb_scope_cache`, `completion_datasets`, and `dedup_results`. It reads only
-  the `sir_wide_raw` branch; despite the artifact name, no completion profile
-  is executed in the new core.
+- The reference harnesses depend on a local canonical bundle and isolated
+  ORCHIDEE artifacts. The complete catalogue comparison reads only the
+  `sir_wide_raw` branch of `completion_datasets` and `dedup_results`; despite
+  the artifact names, no completion profile is executed in the core.
 - GitHub Actions runs the package tests and `R CMD check` on Ubuntu with the
   repository's public synthetic fixtures. The real-data comparison harness is
   intentionally excluded because it depends on local ORCHIDEE 1 artifacts.
@@ -148,12 +162,12 @@ separate portability gate.
   to repeated EVT/ELT ordering, especially during representative selection.
   Singleton classes are 84.4% of global classes and 90.4% of by-type classes.
 
-## Next decisions
+## Reactivation boundary
 
-1. Adopt canonical bundle v2 as an optional operational input in ORCHIDEE 1,
-   keeping the current CHU-native route as the default and keeping CHU-only QA
-   distinct from adapter-local audit evidence.
-2. Continue the Rennes onboarding walkthrough and run an independent-site
-   portability gate when its validated bundle is available.
-3. Keep completion as a separate future decision; it is not implied by this
-   handoff.
+No further feature development is planned in this repository. Continue the
+Rennes onboarding, future portability gates, adapter work, and operational
+method changes in ORCHIDEE.
+
+Reactivate `orchideecore` only after an explicit decision to maintain an
+independently released package or a second consumer outside ORCHIDEE. Completion
+remains a separate future decision and is not implied by this close-out.

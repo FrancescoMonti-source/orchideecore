@@ -2,10 +2,13 @@
 
 [![R-CMD-check](https://github.com/FrancescoMonti-source/orchideecore/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FrancescoMonti-source/orchideecore/actions/workflows/R-CMD-check.yaml)
 
-`orchideecore` is a portable analytical-core experiment, not yet a replacement
-for operational ORCHIDEE 1.
+`orchideecore` is a concluded, feature-frozen portable analytical-core
+experiment. Operational development now belongs to
+[ORCHIDEE](https://github.com/FrancescoMonti-source/orchidee); this repository is
+retained as an independent package, comparison harness, and audit trail. It is
+not an ORCHIDEE runtime dependency.
 
-The primary path now executes the complete 140-row RATB catalogue:
+The final implementation executes the complete 140-row RATB catalogue:
 
 ```text
 validated canonical bundle v1 or v2
@@ -135,6 +138,13 @@ upstream validation, canonical-runtime smoke, complete core execution, manifest
 provenance, output cardinalities, key uniqueness, and the closed isolate-result
 vocabulary all passed. Only aggregate evidence is retained in
 `inst/validation/rouen-bundle-v2-portability-gate-2026-07-19.md`.
+
+The final same-bundle comparison also passed on 2026-07-19. ORCHIDEE and this
+core produced identical global and by-type representatives, SPARES partitions,
+all 773,567 isolate-level indicator results, and the complete annual proportion
+and incidence panels. The comparison used tolerance zero and the raw,
+non-completed branch on both sides. Aggregate evidence is retained in
+`inst/validation/rouen-bundle-v2-same-bundle-gate-2026-07-19.md`.
 
 Before the singleton fast path, two staged uncached runs took 268.89 and 259.52
 seconds. After the change, the complete reference gate took 216.93 seconds and
