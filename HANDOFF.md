@@ -2,7 +2,7 @@
 
 ## Current status
 
-As of 2026-07-11, `orchideecore` executes the complete raw RATB catalogue with
+As of 2026-07-19, `orchideecore` executes the complete raw RATB catalogue with
 one primary profile:
 
 - `ratb_catalogue_raw_patient_year_v1` (140 indicators, global and by-type).
@@ -43,7 +43,15 @@ catalogue has MD5
 `bebc2da626aa22e881fa1f6786d1a459`, identical to ORCHIDEE 1.
 The gate was rerun after API ratification and passed at every comparison level.
 
-The package now has 20 specification/invariant test cases. Every added test
+On 2026-07-19, the Rouen adapter bundle v2 passed the strict upstream validator,
+the canonical-runtime smoke, and complete catalogue execution in this core.
+The manifest correctly reports canonical input v2 while retaining
+`ratb_catalogue_result_v1`; all catalogue cardinality, key-uniqueness, scope,
+and isolate-result vocabulary checks passed. Only non-identifying aggregate
+evidence is retained in
+`inst/validation/rouen-bundle-v2-portability-gate-2026-07-19.md`.
+
+The package now has 21 specification/invariant test cases. Every added test
 states the contract it protects.
 
 The ratified public API contains only `read_orchidee_bundle()`,
@@ -51,6 +59,12 @@ The ratified public API contains only `read_orchidee_bundle()`,
 returns `ratb_catalogue_result_v1`; empty isolate and proportion outputs retain
 their typed schemas, and transient representative-order columns are not
 exposed.
+
+Canonical bundle v1 and v2 are accepted as inputs. Missing contract metadata is
+the legacy v1 form. Bundle v2 is accepted only with
+`sejuf_semantics = "hospitalization_unit_at_sampling"`, and the result manifest
+reports the validated input contract without changing the v1 output schema or
+method profile.
 
 ## Ownership split
 
@@ -103,12 +117,12 @@ analytical perimeter and retained in the audit with their reason. TA/DE is
 joined to the selected unit only after attribution. The incidence denominator
 continues to come from PMSI hospitalisation activity on the same unit mapping.
 
-The future builder configuration will expose one central choice between
+The upstream builder configuration exposes one central choice between
 `hebergement` (default) and `prelevement`; this is not a downstream core knob.
 Attribution, perimeter filters, and output stratification do not alter the
-patient-year deduplication keys. The current bundle v1 and its ratified
-comparison gate remain unchanged until the upstream adapter and a successor
-bundle contract are implemented and validated separately.
+patient-year deduplication keys. The original bundle v1 and its ratified
+comparison gate remain unchanged; the successor v2 contract is validated as a
+separate portability gate.
 
 ## Known limits
 
@@ -136,11 +150,10 @@ bundle contract are implemented and validated separately.
 
 ## Next decisions
 
-1. Walk through the external-site path from the Rennes user point of view and
-   correct the upstream ORCHIDEE 1 wiki and onboarding material while keeping
-   site adapters outside this repository.
-2. Once ORCHIDEE 1 has materialized and validated the four-file canonical
-   bundle, run the second-bundle portability gate here and retain only
-   non-identifying aggregate evidence.
+1. Adopt canonical bundle v2 as an optional operational input in ORCHIDEE 1,
+   keeping the current CHU-native route as the default and keeping CHU-only QA
+   distinct from adapter-local audit evidence.
+2. Continue the Rennes onboarding walkthrough and run an independent-site
+   portability gate when its validated bundle is available.
 3. Keep completion as a separate future decision; it is not implied by this
    handoff.

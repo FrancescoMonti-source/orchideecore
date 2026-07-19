@@ -8,7 +8,7 @@ for operational ORCHIDEE 1.
 The primary path now executes the complete 140-row RATB catalogue:
 
 ```text
-validated canonical bundle v1
+validated canonical bundle v1 or v2
   -> sample TA/DE scope
   -> RATB biological plausibility QC
   -> raw patient-year SPARES deduplication (global and by sample type)
@@ -35,6 +35,10 @@ The package consumes the four files built and validated by ORCHIDEE 1:
 
 Validation of the complete external contract remains owned by ORCHIDEE 1.
 This package adds only the assertions required to execute this slice safely.
+Legacy metadata without `contract_version` is interpreted as v1. A v2 bundle
+must declare both `contract_version = "v2"` and
+`sejuf_semantics = "hospitalization_unit_at_sampling"`; the result manifest
+records the input contract actually used.
 GitHub Actions runs the package tests and `R CMD check` only against the
 public synthetic fixtures committed in this repository. The real-data
 comparison gate remains a local validation step.
@@ -125,6 +129,12 @@ incidence panel were identical to ORCHIDEE 1. The focused-profile evidence
 remains in
 `inst/validation/reference-gate-2026-07-11.md`; the full gate is recorded in
 `inst/validation/catalogue-reference-gate-2026-07-11.md`.
+
+The Rouen canonical bundle v2 portability gate passed on 2026-07-19: strict
+upstream validation, canonical-runtime smoke, complete core execution, manifest
+provenance, output cardinalities, key uniqueness, and the closed isolate-result
+vocabulary all passed. Only aggregate evidence is retained in
+`inst/validation/rouen-bundle-v2-portability-gate-2026-07-19.md`.
 
 Before the singleton fast path, two staged uncached runs took 268.89 and 259.52
 seconds. After the change, the complete reference gate took 216.93 seconds and
