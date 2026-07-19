@@ -5,7 +5,7 @@
 read_orchidee_bundle(bundle_dir)
 }
 \arguments{
-\item{bundle_dir}{Directory containing the four preferred v1 RDS files.}
+\item{bundle_dir}{Directory containing the four canonical v1 or v2 RDS files.}
 }
 \value{A named list containing the canonical bundle objects.}
 \description{

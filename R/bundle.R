@@ -22,6 +22,38 @@
   atb_cols
 }
 
+.canonical_contract_version <- function(bundle) {
+  meta <- bundle[["sir_wide_meta"]]
+  if (!is.list(meta)) {
+    .abort("sir_wide_meta must be a list.")
+  }
+
+  version <- meta[["contract_version"]]
+  if (is.null(version)) {
+    return("v1")
+  }
+  if (
+    !is.character(version) || length(version) != 1L || is.na(version) ||
+      !version %in% c("v1", "v2")
+  ) {
+    .abort("sir_wide_meta$contract_version must be one of: v1, v2.")
+  }
+  if (identical(version, "v2")) {
+    semantics <- meta[["sejuf_semantics"]]
+    if (
+      !is.character(semantics) || length(semantics) != 1L ||
+        is.na(semantics) ||
+        !identical(semantics, "hospitalization_unit_at_sampling")
+    ) {
+      .abort(
+        "sir_wide_meta$sejuf_semantics must equal ",
+        "'hospitalization_unit_at_sampling' for contract v2."
+      )
+    }
+  }
+  version
+}
+
 .validate_slice_bundle <- function(bundle) {
   required_names <- c(
     "sir_wide", "sir_wide_meta", "sample_scope_reference",
@@ -32,6 +64,8 @@
       "bundle must contain: ", paste(required_names, collapse = ", ")
     )
   }
+
+  .canonical_contract_version(bundle)
 
   sir <- bundle[["sir_wide"]]
   scope <- bundle[["sample_scope_reference"]]
@@ -82,7 +116,7 @@
       anyDuplicated(denominator[["calendar_year"]]) ||
       any(denominator[["hospital_nights"]] < 0)
   ) {
-    .abort("The annual incidence denominator violates the v1 invariants.")
+    .abort("The annual incidence denominator violates the canonical invariants.")
   }
 
   .resolve_atb_cols(bundle)
@@ -91,7 +125,7 @@
 
 #' Read a validated ORCHIDEE canonical bundle
 #'
-#' @param bundle_dir Directory containing the four preferred v1 RDS files.
+#' @param bundle_dir Directory containing the four canonical v1 or v2 RDS files.
 #' @return A named list containing the canonical bundle objects.
 #' @export
 read_orchidee_bundle <- function(bundle_dir) {

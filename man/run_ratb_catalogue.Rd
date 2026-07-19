@@ -18,7 +18,7 @@ An object of class `orchidee_ratb_catalogue`. Its primary results
   `manifest$output_contract`.
 }
 \description{
-Executes the packaged ORCHIDEE 1 catalogue from a validated canonical v1
-bundle. Completion, reporting, caching, and hospital-specific extraction
+Executes the packaged ORCHIDEE 1 catalogue from a validated canonical v1 or
+v2 bundle. Completion, reporting, caching, and hospital-specific extraction
 are deliberately excluded.
 }

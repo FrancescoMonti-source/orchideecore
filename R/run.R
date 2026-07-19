@@ -9,6 +9,7 @@
     incidence_indicator_id
   ) {
   .validate_slice_bundle(bundle)
+  canonical_contract <- .canonical_contract_version(bundle)
   sir <- bundle[["sir_wide"]]
   sir[["canonical_row_id"]] <- .make_canonical_row_id(sir)
   atb_cols <- .resolve_atb_cols(bundle)
@@ -44,7 +45,7 @@
   out <- list(
     manifest = list(
       method_profile = method_profile,
-      canonical_contract = "v1",
+      canonical_contract = canonical_contract,
       completion_applied = FALSE,
       indicator_inputs = indicator_inputs,
       resistance_indicator_id = resistance_indicator_id,

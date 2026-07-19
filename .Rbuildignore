@@ -4,3 +4,4 @@
 ^.*\.tar\.gz$
 ^\.lib$
 ^\.github$
+^\.git$
