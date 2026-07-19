@@ -7,8 +7,9 @@ operational reference and must not be modified as a side effect of work here.
 
 ## Current boundary
 
-- Input: a canonical external bundle v1 already built and validated by
-  ORCHIDEE 1.
+- Input: a canonical external bundle v1 or v2 already built and validated by
+  ORCHIDEE 1. Bundle v2 fixes `SEJUF` semantics as the hospitalisation unit at
+  sampling time.
 - Implemented: TA/DE scope application, RATB plausibility QC, raw global and
   by-type patient-year SPARES-style deduplication, the complete 140-row RATB
   indicator catalogue, annual resistance, annual incidence, and audit

@@ -38,6 +38,7 @@ test_that("the complete runner returns the ratb catalogue result v1 contract", {
     result$manifest$output_contract,
     "ratb_catalogue_result_v1"
   )
+  expect_identical(result$manifest$canonical_contract, "v1")
   expect_equal(
     anyDuplicated(result$proportion_annual[c(
       "indicator_id", "scope", "sample_type", "dedup_year"
@@ -65,6 +66,32 @@ test_that("the complete runner returns the ratb catalogue result v1 contract", {
   expect_false(".row_id_global" %in% names(
     result$dedup$by_type$representatives
   ))
+})
+
+# Why: protects the closed canonical input contract and truthful provenance.
+test_that("the runners recognize only valid canonical bundle v2 metadata", {
+  bundle <- make_catalogue_fixture()
+  bundle$sir_wide_meta$contract_version <- "v2"
+  bundle$sir_wide_meta$sejuf_semantics <-
+    "hospitalization_unit_at_sampling"
+
+  result <- run_ratb_catalogue(bundle)
+  expect_identical(result$manifest$canonical_contract, "v2")
+  expect_identical(result$manifest$output_contract, "ratb_catalogue_result_v1")
+  focused <- run_saureus_methicillin_slice(bundle)
+  expect_identical(focused$manifest$canonical_contract, "v2")
+
+  bundle$sir_wide_meta$sejuf_semantics <- "microbiology_unit_at_sampling"
+  expect_error(
+    run_ratb_catalogue(bundle),
+    "sejuf_semantics must equal 'hospitalization_unit_at_sampling'"
+  )
+
+  bundle$sir_wide_meta$sejuf_semantics <- NULL
+  expect_error(run_ratb_catalogue(bundle), "sejuf_semantics must equal")
+
+  bundle$sir_wide_meta$contract_version <- "v3"
+  expect_error(run_ratb_catalogue(bundle), "contract_version must be one of")
 })
 
 # Why: protects the output contract when a valid bundle has no eligible rows.

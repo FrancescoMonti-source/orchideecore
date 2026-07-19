@@ -209,7 +209,7 @@ ratb_indicator_catalogue <- function() {
       data.frame(
         rule_id = "qc_enterobacterales_nalidixic_s_fq_r",
         reason = paste(
-          "acide_nalidixique is not present in the canonical v1 contract"
+          "acide_nalidixique is not present in the canonical bundle contract"
         ),
         stringsAsFactors = FALSE
       )
@@ -566,8 +566,8 @@ ratb_indicator_catalogue <- function() {
 
 #' Run the complete raw RATB indicator catalogue
 #'
-#' Executes the packaged ORCHIDEE 1 catalogue from a validated canonical v1
-#' bundle. Completion, reporting, caching, and hospital-specific extraction
+#' Executes the packaged ORCHIDEE 1 catalogue from a validated canonical v1 or
+#' v2 bundle. Completion, reporting, caching, and hospital-specific extraction
 #' are deliberately excluded.
 #'
 #' @param bundle A list returned by `read_orchidee_bundle()` or an equivalent
@@ -586,6 +586,7 @@ run_ratb_catalogue <- function(bundle) {
     , drop = FALSE
   ]
   .validate_catalogue_bundle(bundle, spec)
+  canonical_contract <- .canonical_contract_version(bundle)
   taxonomy <- .read_species_taxonomy()
   sir <- bundle[["sir_wide"]]
   sir[["canonical_row_id"]] <- .make_canonical_row_id(sir)
@@ -617,7 +618,7 @@ run_ratb_catalogue <- function(bundle) {
   out <- list(
     manifest = list(
       method_profile = "ratb_catalogue_raw_patient_year_v1",
-      canonical_contract = "v1",
+      canonical_contract = canonical_contract,
       output_contract = "ratb_catalogue_result_v1",
       completion_applied = FALSE,
       n_indicators = nrow(spec),
